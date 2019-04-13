@@ -18,12 +18,15 @@ limitations under the License.
 #include "SiddhiqlBaseVisitor.h"
 #include "query/DefinitionStream.h"
 #include "query/ExecutionElement.h"
+#include "query/AttributeTypeMapper.h"
+
 class TranslatorVisitor : SiddhiqlBaseVisitor{
 private:
     static InputOutputMapper* localInputOutputMapperTemp;
     static bool flagForAddIOMapperString;
     static int countIOMapper;
     static vector<InputOutputMapper> inputOutputMapperList;
+    int definitionVisitCount;
 public:
     virtual antlrcpp::Any visitApp_annotation(SiddhiqlParser::App_annotationContext *ctx) override;
     virtual antlrcpp::Any visitSiddhi_app(SiddhiqlParser::Siddhi_appContext *ctx) override;
@@ -36,6 +39,7 @@ public:
 
     TranslatorVisitor();
     static InputOutputMapper getInputOutputMapperFromList(int index);
+    static vector<InputOutputMapper> getInputOutputMapperList();
     static void addInputOutputMapperInList(InputOutputMapper obj);
     static void setLocalInputOutputMapperTemp(InputOutputMapper* ctx);
     static void setFlagForAddIOMapperString(bool value);

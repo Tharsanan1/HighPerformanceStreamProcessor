@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.13)
-project(ProducerConsumer)
+project(Stream_Processor)
 
 set(CMAKE_CXX_STANDARD 14)
 
@@ -49,9 +49,14 @@ add_executable(ProducerConsumer
     stream-processor-generator/src/query/ExecutionElement.h
     stream-processor-generator/src/query/OutputAttribute.cpp
     stream-processor-generator/src/query/OutputAttribute.h
-        stream-processor-generator/src/query/InputOutputMapper.cpp
-        stream-processor-generator/src/query/InputOutputMapper.h
-    main.cpp)
+    stream-processor-generator/src/query/InputOutputMapper.cpp
+    stream-processor-generator/src/query/InputOutputMapper.h
+    stream-processor-generator/src/query/AttributeTypeMapper.cpp
+    stream-processor-generator/src/query/InputBufferCreator.cpp
+    stream-processor-generator/src/query/BufferGenerator.cpp
+    stream-processor-generator/src/query/DetailContainerCreator.cpp
+    main.cpp
+)
 
 
 

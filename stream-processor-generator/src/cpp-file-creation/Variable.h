@@ -20,6 +20,9 @@ limitations under the License.
 using namespace std;
 class Variable {
 public:
+    Variable();
+    string initValue;
+    bool isStatic;
     string dataType;
     string identifier;
     vector<string> lines;

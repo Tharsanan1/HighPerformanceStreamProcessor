@@ -21,6 +21,8 @@ limitations under the License.
 #include "stream-processor-generator/src/antlr/TranslatorVisitor.h"
 #include "stream-processor-generator/src/antlr/TranslatorVisitor.h"
 #include "queue"
+#include "BufferGenerator.h"
+#include "DetailContainerCreator.h"
 
 using namespace antlrcpp;
 using namespace antlr4;
@@ -34,20 +36,29 @@ int main ( int argc, const char *args[]){
     CommonTokenStream tokens1(&lexer1);
     SiddhiqlParser parser1(&tokens1);
     TranslatorVisitor translatorVisitor;
-    cout << "\n visiting starts \n";
     SiddhiqlParser :: Siddhi_appContext * visitTree = parser1.siddhi_app();
     translatorVisitor.visitSiddhi_app(visitTree);
-
-    std::cout << "AppName : " << translatorVisitor.appName;
-    std::cout << "Annotation : " << TranslatorVisitor::definitionStreams[1].annotation.getName();
-    string commonIncludeLines;
-    for (int i = 0; i < TranslatorVisitor::commonIncludes.size(); i++) {
-        commonIncludeLines += "#include\"" + TranslatorVisitor::commonIncludes[i] + "\n";
+    AttributeTypeMapper attributeTypeMapper;
+    BufferGenerator bufferGenerator;
+    string argString = "";
+    int count  = 0;
+    for(auto const& x : AttributeTypeMapper::getInputAttributeMap()){
+        if(count == 0){
+            argString += x.first + " " + x.second;
+        }
+        else{
+            argString += + "," + x.first + " " + x.second;
+        }
+        count++;
     }
-    commonIncludeLines += "#include <iostream>\n";
-    commonIncludeLines += "using namespace std;\n";
-    ofstream headerFile("/home/tharsanan/Tharsanan/FYP/siddhi-llvm/Generated_SP/common.h");
-    headerFile << commonIncludeLines;
-    headerFile.close();
+    bufferGenerator.readArgs(argString);
+    for (int i = 0; i < TranslatorVisitor::getInputOutputMapperList().size(); ++i) {
+        bufferGenerator.iomappers.push_back(TranslatorVisitor::getInputOutputMapperFromList(i));
+    }
+    bufferGenerator.createViaFileCreator();
+    DetailContainerCreator detailContainerCreator;
+    detailContainerCreator.create();
+
+
     return 0;
 }

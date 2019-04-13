@@ -13,6 +13,10 @@ limitations under the License.
 
 #include "Method.h"
 
+Method::Method() {
+    isStatic = false;
+}
+
 Method Method::createSetterMethod(string variableName, string variableType){
     Method method;
     method.returnType = "void";

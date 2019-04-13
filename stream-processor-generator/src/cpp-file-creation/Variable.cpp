@@ -12,6 +12,10 @@ limitations under the License.
 */
 
 #include "Variable.h"
+Variable::Variable() {
+    isStatic = false;
+}
+
 void Variable::setIdentifier(string s){
     identifier = s;
 }

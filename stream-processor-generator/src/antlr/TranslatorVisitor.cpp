@@ -22,11 +22,11 @@ int TranslatorVisitor::countIOMapper = 0;
 vector<InputOutputMapper> TranslatorVisitor::inputOutputMapperList;
 
 TranslatorVisitor::TranslatorVisitor(){
-
+    definitionVisitCount = 0;
 }
 
 antlrcpp::Any TranslatorVisitor::visitSiddhi_app(SiddhiqlParser::Siddhi_appContext *ctx) {
-    std :: cout << "\nvisit siddhi app. \n";
+//    std :: cout << "\nvisit siddhi app. \n";
     return visitChildren(ctx);
 }
 
@@ -37,24 +37,21 @@ antlrcpp::Any TranslatorVisitor::visitApp_annotation(SiddhiqlParser::App_annotat
         TranslatorVisitor :: appName =  app_annotationContext->annotation_element(0)
                 ->property_value()->string_value()->getText() ;
     }
-    return 0;
+    return visitChildren(ctx);
 }
 
 
 antlrcpp::Any TranslatorVisitor :: visitDefinition_stream(SiddhiqlParser::Definition_streamContext *ctx){
-    std :: cout << "\nvisit visitDefinition_stream. \n" << "annotation : " << ctx->annotation().size();
-    DefinitionStream definitionStream;
-    if(ctx->annotation().size() > 0){
-        definitionStream.setAnnotation(createAnnotation(ctx->annotation(0)));
+    definitionVisitCount++;
+    for (int i = 0; i < ctx->attribute_name_type().size(); ++i) {
+        if(definitionVisitCount == 1){
+            AttributeTypeMapper::addToInputAttributeMap(ctx->attribute_name_type(i)->attribute_name()->getText(), ctx->attribute_name_type(i)->attribute_type()->getText());
+        }
+        else{
+            AttributeTypeMapper::addToOutputAttributeMap(ctx->attribute_name_type(i)->attribute_name()->getText(), ctx->attribute_name_type(i)->attribute_type()->getText());
+        }
     }
-    definitionStream.setSource(ctx->source()->stream_id()->name()->id()->getText());
-    for (int i = 0; i < ctx->attribute_name().size(); i++) {
-        std::cout << ctx->attribute_name(i)->getText() << "\n";
-        definitionStream.addParam(ctx->attribute_name(i)->getText(),ctx->attribute_type(i)->getText());
-    }
-
-    definitionStreams.push_back(definitionStream);
-    return 0;
+    return visitChildren(ctx);
 }
 
 antlrcpp::Any TranslatorVisitor::visitExecution_element(SiddhiqlParser::Execution_elementContext *ctx){
@@ -129,4 +126,8 @@ InputOutputMapper TranslatorVisitor::getInputOutputMapperFromList(int index){
 
 void TranslatorVisitor::addInputOutputMapperInList(InputOutputMapper obj){
     inputOutputMapperList.push_back(obj);
+}
+
+vector<InputOutputMapper> TranslatorVisitor::getInputOutputMapperList(){
+    return inputOutputMapperList;
 }

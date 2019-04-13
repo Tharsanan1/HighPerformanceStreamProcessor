@@ -18,7 +18,12 @@ void ClassCreator::preparePublicMethodLines(){
     for (int i = 0; i < publicMembers.publicMethods.size(); i++) {
         Method method = publicMembers.publicMethods[i];
         string inputLine = "";
-        inputLine += method.returnType + " " + method.identifier + "(";
+        if(method.isStatic) {
+            inputLine += "static " + method.returnType + " " + method.identifier + "(";
+        }
+        else{
+            inputLine += method.returnType + " " + method.identifier + "(";
+        }
         bool flag = false;
         for( auto const& x : method.params )
         {
@@ -38,7 +43,12 @@ void ClassCreator::preparePublicVariableLines(){
     for (int i = 0; i < publicMembers.publicVariables.size(); i++) {
         Variable variable = publicMembers.publicVariables[i];
         string inputLine = "";
-        inputLine += variable.dataType + " " + variable.identifier + ";";
+        if(variable.isStatic) {
+            inputLine += "static " + variable.dataType + " " + variable.identifier + ";";
+        }
+        else{
+            inputLine += variable.dataType + " " + variable.identifier + ";";
+        }
         publicMembers.variableLines.push_back(inputLine);
     }
 }
@@ -64,16 +74,22 @@ string ClassCreator::createHeaderSource(){
 }
 
 void ClassCreator::createHeaderFile(){
-    ofstream headerFile("/home/tharsanan/Tharsanan/FYP/siddhi-llvm/Generated_SP/" + className + ".h");
+    ofstream headerFile("/home/tharsanan/CLionProjects/ProducerConsumer/stream-processor/" + className + ".h");
     headerFile << headerSrc;
     headerFile.close();
 }
 
 string ClassCreator::createCppSource() {
+
+
+
     if(className != "main"){
         cppSrc += "#include " + string("\"") + className + ".h" + string("\"\n");
         cppSrc += className + "::" + className + "(){\n";
         for(int i = 0; i < publicMembers.publicVariables.size(); i++){
+            if(publicMembers.publicVariables[i].isStatic){
+                continue;
+            }
             if(publicMembers.publicVariables[i].dataType == "int"){
                 cppSrc += publicMembers.publicVariables[i].identifier + " = " + "0;\n";
             }
@@ -90,6 +106,13 @@ string ClassCreator::createCppSource() {
     else{
         cppSrc += include.getIncludes();
     }
+
+    for(int i = 0; i < publicMembers.publicVariables.size(); i++) {
+        if (publicMembers.publicVariables[i].isStatic) {
+            cppSrc += publicMembers.publicVariables[i].dataType + " " + className + "::" + publicMembers.publicVariables[i].identifier + " = " + publicMembers.publicVariables[i].initValue + ";\n";
+        }
+    }
+
     for (int i = 0; i < publicMembers.publicMethods.size(); i++) {
         Method method = publicMembers.publicMethods[i];
         if(className != "main") {
@@ -118,7 +141,7 @@ string ClassCreator::createCppSource() {
 }
 
 void ClassCreator::createCppFile(){
-    ofstream headerFile1("/home/tharsanan/Tharsanan/FYP/siddhi-llvm/Generated_SP/" + className + ".cpp");
+    ofstream headerFile1("/home/tharsanan/CLionProjects/ProducerConsumer/stream-processor/" + className + ".cpp");
     headerFile1 << cppSrc;
     headerFile1.close();
 }

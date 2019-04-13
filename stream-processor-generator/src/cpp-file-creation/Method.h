@@ -21,6 +21,8 @@ limitations under the License.
 using namespace std;
 class Method {
 public:
+    Method();
+    bool isStatic;
     string returnType;
     string identifier;
     map<string,string> params;

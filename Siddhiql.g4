@@ -45,7 +45,11 @@ definition_stream_final
     ;
 
 definition_stream
-    : annotation* DEFINE STREAM source '(' attribute_name attribute_type (',' attribute_name attribute_type )* ')'
+    : annotation* DEFINE STREAM source '(' attribute_name_type (',' attribute_name_type )* ')'
+    ;
+
+attribute_name_type
+    : attribute_name attribute_type
     ;
 
 definition_table_final

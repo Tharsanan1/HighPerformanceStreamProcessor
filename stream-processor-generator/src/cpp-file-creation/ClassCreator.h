@@ -16,6 +16,7 @@ limitations under the License.
 
 #include "Include.h"
 #include "PublicMembers.h"
+#include "Enum.h"
 #include <string>
 
 using namespace std;
@@ -35,6 +36,7 @@ public:
     string createCppSource();
     void createHeaderFile();
     void createCppFile();
+    vector<Enum> enumList;
 };
 
 

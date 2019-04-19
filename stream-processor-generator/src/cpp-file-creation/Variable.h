@@ -21,6 +21,7 @@ using namespace std;
 class Variable {
 public:
     Variable();
+    bool shoulInit;
     string initValue;
     bool isStatic;
     string dataType;

@@ -6,16 +6,19 @@
 #define STREAM_PROCESSOR_EXECUTORCREATOR_H
 
 #include <thread>
+#include "BufferContainer.h"
 
 using namespace std;
 
 class ExecutorCreator {
 private:
     int numberOfOutputAttributes;
-
+    BufferContainer* bufferContainer;
 public:
     ExecutorCreator();
-    void createThreads();
+    void createThreads(ExecutorCreator* executorCreator);
+    void run(int consumerIndex);
+    void tempFunc();
 };
 
 

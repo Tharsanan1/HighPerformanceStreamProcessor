@@ -5,18 +5,35 @@
 #include "ExecutorCreator.h"
 
 ExecutorCreator::ExecutorCreator(){
-    numberOfOutputAttributes = DetailContainer.getNumberOfOutputAttributes();
+    numberOfOutputAttributes = DetailContainer::getNumberOfOutputAttributes();
 }
 
-void ExecutorCreator::createThreads(){
-    BufferContainer* bufferContainer = new BufferContainer();
-    std::thread t[num_threads];
-    for (int i = 0; i < num_threads; ++i) {
-        t[i] = std::thread(&BufferContainer::executeProcess, bufferContainer, i);
+void ExecutorCreator::run(int consumerIndex){
+    while(DetailContainer::getExecutionFlag()){
+        bufferContainer->executeProcess(consumerIndex);
     }
-    for (int i = 0; i < num_threads; ++i) {
+}
+
+void ExecutorCreator::tempFunc(){
+    for (int i = 0; i < 100; ++i) {
+        bufferContainer->pushWeight(i);
+        bufferContainer->pushWeightt(i+1000);
+//        usleep(10);
+    }
+
+}
+
+void ExecutorCreator::createThreads(ExecutorCreator* executorCreator){
+    bufferContainer = new BufferContainer();
+    std::thread t[numberOfOutputAttributes];
+    for (int i = 0; i < numberOfOutputAttributes; ++i) {
+        t[i] = std::thread(&ExecutorCreator::run, executorCreator, i);
+    }
+    thread th = thread(&ExecutorCreator::tempFunc, executorCreator);
+    for (int i = 0; i < numberOfOutputAttributes; ++i) {
         t[i].join();
     }
+    th.join();
     delete bufferContainer;
 
 }

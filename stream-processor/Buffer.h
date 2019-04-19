@@ -2,8 +2,8 @@
 // Created by tharsanan on 4/5/19.
 //
 
-#ifndef PRODUCERCONSUMER_BUFFER_H
-#define PRODUCERCONSUMER_BUFFER_H
+#ifndef STREAM_PROCESSOR_BUFFER_H
+#define STREAM_PROCESSOR_BUFFER_H
 
 
 #include <queue>
@@ -14,6 +14,7 @@
 #include <condition_variable>
 #include <zconf.h>
 #include "iostream"
+#include "BufferLocker.h"
 
 using namespace std;
 
@@ -27,6 +28,7 @@ private:
 public:
     Buffer();
     T back();
+    T front();
     T pop();
     void push(T const&);
 };
@@ -39,25 +41,46 @@ Buffer<T>::Buffer(){
 template <class T>
 T Buffer<T>::back(){
     if (bufferQueue->empty()) {
-        throw out_of_range("Queue<>::back(): empty Queue");
+        //throw out_of_range("Queue<>::back(): empty Queue");
+        cout << "minus one is read size is : " << bufferQueue->size() << "\n";
+        return -1;
     }
+    BufferLocker::cout_mutex.lock();
+    cout << bufferQueue->back() << " is read size is : " << bufferQueue->size() << "\n";
+    BufferLocker::cout_mutex.unlock();
     return bufferQueue->back();
+}
+
+template <class T>
+T Buffer<T>::front(){
+    unique_lock<mutex> locker(mutexForPopPushLock);
+    while(bufferQueue->empty()){
+        m_condVar.wait(locker);
+    }
+    T value = bufferQueue->front();
+    BufferLocker::cout_mutex.lock();
+    cout << this_thread::get_id() << " this thread have read " << value << "\n";
+    BufferLocker::cout_mutex.unlock();
+//    cout << value << " is front, size is : " << bufferQueue->size() << "\n";
+    locker.unlock();
+    return value;
 }
 
 template <class T>
 T Buffer<T>::pop(){
     unique_lock<mutex> locker(mutexForPopPushLock);
-    if(bufferQueue->empty()){
-        cout << "thread is going to wait\n";
-
+    while(bufferQueue->empty()){
         m_condVar.wait(locker);
-        cout << "thread has been notified\n";
     }
     T value = bufferQueue->front();
     bufferQueue->pop();
-    cout << value << " is popped size is : " << bufferQueue->size() << "\n";
+    BufferLocker::cout_mutex.unlock();
+    cout << this_thread::get_id() << " this thread have popped " << value << "\n";
+    BufferLocker::cout_mutex.unlock();
+//        if(value == 99999) {
+//            cout << value << " is popped size is : " << bufferQueue->size() << "\n";
+//}
     locker.unlock();
-    //usleep(13);
     return value;
 }
 
@@ -65,11 +88,9 @@ template <class T>
 void Buffer<T>::push(T const& value){
     unique_lock<mutex> locker(mutexForPopPushLock);
     bufferQueue->push(value);
-    cout << value << " going to notify " << "\n";
     locker.unlock();
     m_condVar.notify_all();
-    //usleep(10);
 }
 
 
-#endif //PRODUCERCONSUMER_BUFFER_H
+#endif //STREAM_PROCESSOR_BUFFER_H

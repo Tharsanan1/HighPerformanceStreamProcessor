@@ -29,7 +29,7 @@ std::string BufferGenerator::makeFirstCapital(std::string s) {
 }
 
 void BufferGenerator::readArgs(std::string input_args) {
-    std::vector<std::string> input_args_array = split(input_args, ", ");
+    std::vector<std::string> input_args_array = split(input_args, ",");
     for (int i = 0; i < input_args_array.size(); i++) {
         std::vector<std::string> types_params_array = split(input_args_array[i], " ");
         BufferGenerator::input_params.push_back(types_params_array[0]);
@@ -42,18 +42,37 @@ void BufferGenerator::readArgs(std::string input_args) {
 
 
 void BufferGenerator::preparingVariables() {
+//    static mutex mutexForPopPushLock[constants::inputAttributeCount];
+    Variable mutexArray;
+    mutexArray.isStatic = true;
+    mutexArray.dataType = "mutex";
+    mutexArray.identifier = "mutexForPopPushLock[constants::inputAttributeCount]";
+    mutexArray.shoulInit = false;
     for (int i = 0; i < input_params.size(); ++i) {
         Variable variable;
-        Method method;
         variable.dataType = "Buffer<" + input_types[i] + ">";
         variable.identifier = input_params[i] + "Buffer";
+        variables.push_back(variable);
+
+        Method method;
         method.returnType = "void";
         method.identifier = "push" + makeFirstCapital(input_params[i]);
         method.params.insert(pair<string, string>(input_types[i], "value"));
         method.lines.push_back(input_params[i] + "Buffer.push(value);");
-        variables.push_back(variable);
+
         methods.push_back(method);
+
+        Method get;
+        get.identifier = "getFrom" + makeFirstCapital(input_params[i]);
+        get.params.insert(pair<string, string>("int", "consumerIndex"));
+        get.returnType = input_types[i] ;
+        get.lines.push_back("unique_lock<mutex> lock(mutexForPopPushLock["+to_string(i)+"]);");
+        get.lines.push_back("if(BufferLocker::canPopData(" + to_string(i) + ", consumerIndex, &lock)){");
+        get.lines.push_back("return " + input_params[i] + "Buffer.pop();\n}");
+        get.lines.push_back("else{\nreturn " + input_params[i] + "Buffer.front();\n}");
+        methods.push_back(get);
     }
+    variables.push_back(mutexArray);
 }
 
 void BufferGenerator::preparingExecutingFunction() {
@@ -69,18 +88,18 @@ void BufferGenerator::preparingExecutingFunction() {
         variable.dataType = "Executor";
         this->variables.push_back(variable);
 
-        caseMethod.lines.push_back("case "+std::to_string(i)+" : processLogic"+std::to_string(i)+"();");
+        caseMethod.lines.push_back("case "+std::to_string(i)+" : processLogic"+std::to_string(i)+"();\nbreak;");
         Method method;
-        method.identifier = "processLogic"+iomappers[i].getOutput();
+        method.identifier = "processLogic"+to_string(AttributeTypeMapper::getNumberForOutputAttribute(iomappers[i].getOutput()));
         method.returnType = "void";
         string args = "";
         for (int j = 0; j < iomappers[i].getDependList().size(); ++j) {
             string param = iomappers[i].getDependList()[j];
             string type = AttributeTypeMapper::getTypeForInputAttribute(iomappers[i].getDependList()[j]);
-            method.lines.push_back(type+" "+param+" = "+param+"Buffer.pop();");
-            args = args + type+" "+param+", ";
+            method.lines.push_back(type+" "+param+" = getFrom" + makeFirstCapital(param)+"("+to_string(i)+");");
+            args = args +param+", ";
         }
-        method.lines.push_back("executor"+std::to_string(i)+".performMathLogic("+args.substr(0,args.size()-2)+" );");
+        method.lines.push_back("Executor::performMathLogic" + std::to_string(i) + "("+args.substr(0,args.size()-2)+" );");
         this->methods.push_back(method);
     }
     caseMethod.lines.push_back("}");
@@ -90,9 +109,9 @@ void BufferGenerator::preparingExecutingFunction() {
 void BufferGenerator::createViaFileCreator() {
     this->producer.className = "BufferContainer";
     this->include.includes.push_back("Buffer.h");
-    this->include.includes.push_back("CommonType.h");
     this->include.includes.push_back("iostream");
     this->include.includes.push_back("Executor.h");
+    this->include.includes.push_back("BufferLocker.h");
 
     this->producer.include = this->include;
 

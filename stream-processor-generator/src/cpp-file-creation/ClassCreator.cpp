@@ -69,6 +69,18 @@ string ClassCreator::createHeaderSource(){
         headerSrc += tab + publicMembers.variableLines[k] + "\n";
     }
     headerSrc += "};\n";
+    for (int i = 0; i < enumList.size(); ++i) {
+        headerSrc += "enum " + enumList[i].getName() + "{\n";
+        bool flag = false;
+        for( auto const& x : enumList[i].getNameValueMap()){
+            headerSrc +=  x.first + " = " + x.second + ",";
+            flag = true;
+        }
+        if(flag){
+            headerSrc = headerSrc.substr(0, headerSrc.size()-1);
+        }
+        headerSrc += "};\n";
+    }
     createHeaderFile();
     return headerSrc;
 }
@@ -109,7 +121,12 @@ string ClassCreator::createCppSource() {
 
     for(int i = 0; i < publicMembers.publicVariables.size(); i++) {
         if (publicMembers.publicVariables[i].isStatic) {
-            cppSrc += publicMembers.publicVariables[i].dataType + " " + className + "::" + publicMembers.publicVariables[i].identifier + " = " + publicMembers.publicVariables[i].initValue + ";\n";
+            if(publicMembers.publicVariables[i].shoulInit){
+                cppSrc += publicMembers.publicVariables[i].dataType + " " + className + "::" + publicMembers.publicVariables[i].identifier + " = " + publicMembers.publicVariables[i].initValue + ";\n";
+            }
+            else{
+                cppSrc += publicMembers.publicVariables[i].dataType + " " + className + "::" + publicMembers.publicVariables[i].identifier + ";\n";
+            }
         }
     }
 

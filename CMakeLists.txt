@@ -41,6 +41,7 @@ add_executable(ProducerConsumer
     stream-processor-generator/src/cpp-file-creation/PublicMembers.h
     stream-processor-generator/src/cpp-file-creation/Variable.cpp
     stream-processor-generator/src/cpp-file-creation/Variable.h
+    stream-processor-generator/src/cpp-file-creation/Enum.cpp
     stream-processor-generator/src/query/Annotation.cpp
     stream-processor-generator/src/query/Annotation.h
     stream-processor-generator/src/query/DefinitionStream.cpp

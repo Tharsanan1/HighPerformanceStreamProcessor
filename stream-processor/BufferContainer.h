@@ -29,9 +29,6 @@ BufferContainer();
 	Buffer<int> weightOutputBuffer;
 	Buffer<long> totalWeightOutputBuffer;
 	Buffer<long> totalWeighttOutputBuffer;
-	Executor executor0;
-	Executor executor1;
-	Executor executor2;
 };
 
 #endif

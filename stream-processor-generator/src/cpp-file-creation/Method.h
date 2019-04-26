@@ -25,6 +25,7 @@ public:
     bool isStatic;
     string returnType;
     string identifier;
+    string argString;
     map<string,string> params;
     vector<string> lines;
     static Method createSetterMethod(string variableName,  string variableType);

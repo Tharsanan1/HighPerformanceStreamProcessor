@@ -15,6 +15,7 @@ limitations under the License.
 
 Method::Method() {
     isStatic = false;
+    argString = "";
 }
 
 Method Method::createSetterMethod(string variableName, string variableType){

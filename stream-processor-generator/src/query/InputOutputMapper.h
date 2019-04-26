@@ -15,11 +15,16 @@ class InputOutputMapper {
 private:
     vector<string> dependOnList;
     string output;
+    vector<string> logicParts;
 public:
     void addToDependOn(string input);
     vector<string> getDependList();
     void setOutput(string outputM);
     string getOutput();
+    void addLogicPart(string logicM);
+    string getLogicString();
+    bool contains(string* ptr, string value, int len);
+    std::string makeFirstCapital(std::string s);
 };
 
 

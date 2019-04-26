@@ -1,0 +1,11 @@
+@App:name("CargoWeightApp")
+
+define stream CargoStream (weight int, weightt int);
+
+@sink(type='log', prefix='LOGGER')
+define stream OutputStream(weight int, totalWeight long, totalWeightt long);
+
+@info(name='CargoWeightQuery')
+from CargoStream
+select weight, sum(weight) as totalWeight, sum(weightt) as totalWeightt
+insert into OutputStream;

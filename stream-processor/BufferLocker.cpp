@@ -2,10 +2,7 @@
 // Created by tharsanan on 4/17/19.
 //
 
-#include <iostream>
 #include "BufferLocker.h"
-#include "BufferContainer.h"
-
 
 condition_variable BufferLocker::m_condVar[constants::inputAttributeCount];
 mutex BufferLocker::mutexForPopPushLock[constants::inputAttributeCount];
@@ -14,7 +11,6 @@ mutex BufferLocker::cout_mutex;
 
 
 bool BufferLocker::canPopData(int inputIndex, int consumerIndex,unique_lock<mutex>* locker){
-    //unique_lock<mutex> locker(BufferContainer::mutexForPopPushLock[inputIndex]);
     while(!isNew(processedConsumerList[inputIndex], consumerIndex)){
         m_condVar[inputIndex].wait(*locker);
 
@@ -22,13 +18,11 @@ bool BufferLocker::canPopData(int inputIndex, int consumerIndex,unique_lock<mute
     processedConsumerList[inputIndex].push_back(consumerIndex);
     if(processedConsumerList[inputIndex].size() == DetailContainer::getDependentConsumerCountForInput(inputIndex)){
         processedConsumerList[inputIndex].clear();
-//        cout << this_thread::get_id() << " this thread will pop." << "\n";
         m_condVar[inputIndex].notify_all();
 
         return true;
     }
     else{
-//        cout << this_thread::get_id() << " this thread will read." << "\n";
         return false;
     }
 }
@@ -41,4 +35,8 @@ bool BufferLocker::isNew(vector<int> vec, int val){
     }
     return true;
 
+}
+
+mutex* BufferLocker::getCoutLock() {
+    return &cout_mutex;
 }

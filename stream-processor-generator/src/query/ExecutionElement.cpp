@@ -59,9 +59,11 @@ void ExecutionElement::createIOMapper(SiddhiqlParser::Query_sectionContext *ctx)
     for (int i = 0; i < ctx->output_attribute().size(); ++i) {
         InputOutputMapper inputOutputMapper;
         if(ctx->output_attribute(i)->attribute_reference()){ //just a pass through.
+            inputOutputMapper.addLogicPart(ctx->output_attribute(i)->attribute_reference()->getText());
             inputOutputMapper.setOutput(ctx->output_attribute(i)->attribute_reference()->getText());
         }
         else{  // can be a math function.
+            prepareLogicParts(&inputOutputMapper, ctx->output_attribute(i)->attribute());
             inputOutputMapper.setOutput(ctx->output_attribute(i)->attribute_name()->getText());
         }
         TranslatorVisitor::addInputOutputMapperInList(inputOutputMapper);
@@ -71,4 +73,19 @@ void ExecutionElement::createIOMapper(SiddhiqlParser::Query_sectionContext *ctx)
 string ExecutionElement::resolveMathOperation(SiddhiqlParser::Math_operationContext *ctx, int i
         , int count, string returnType){
 
+}
+
+void ExecutionElement::prepareLogicParts(InputOutputMapper* inputOutputMapper, SiddhiqlParser::AttributeContext *ctx) {
+    vector<antlr4::tree::ParseTree*> nodes_to_visit = ctx->children;
+    while(nodes_to_visit.size() != 0) {
+        antlr4::tree::ParseTree* currentnode = nodes_to_visit.front();
+        nodes_to_visit.erase(nodes_to_visit.begin());
+        if(currentnode->children.size() == 0) {
+            inputOutputMapper->addLogicPart(currentnode->getText());
+        }
+        else{
+            nodes_to_visit.insert(nodes_to_visit.begin(), currentnode->children.begin(), currentnode->children.end());
+        }
+    }
+    //do something
 }

@@ -41,13 +41,8 @@ Buffer<T>::Buffer(){
 template <class T>
 T Buffer<T>::back(){
     if (bufferQueue->empty()) {
-        //throw out_of_range("Queue<>::back(): empty Queue");
-        cout << "minus one is read size is : " << bufferQueue->size() << "\n";
         return -1;
     }
-    BufferLocker::cout_mutex.lock();
-    cout << bufferQueue->back() << " is read size is : " << bufferQueue->size() << "\n";
-    BufferLocker::cout_mutex.unlock();
     return bufferQueue->back();
 }
 
@@ -58,10 +53,6 @@ T Buffer<T>::front(){
         m_condVar.wait(locker);
     }
     T value = bufferQueue->front();
-    BufferLocker::cout_mutex.lock();
-    cout << this_thread::get_id() << " this thread have read " << value << "\n";
-    BufferLocker::cout_mutex.unlock();
-//    cout << value << " is front, size is : " << bufferQueue->size() << "\n";
     locker.unlock();
     return value;
 }
@@ -74,18 +65,13 @@ T Buffer<T>::pop(){
     }
     T value = bufferQueue->front();
     bufferQueue->pop();
-    BufferLocker::cout_mutex.unlock();
-    cout << this_thread::get_id() << " this thread have popped " << value << "\n";
-    BufferLocker::cout_mutex.unlock();
-//        if(value == 99999) {
-//            cout << value << " is popped size is : " << bufferQueue->size() << "\n";
-//}
     locker.unlock();
     return value;
 }
 
 template <class T>
 void Buffer<T>::push(T const& value){
+
     unique_lock<mutex> locker(mutexForPopPushLock);
     bufferQueue->push(value);
     locker.unlock();

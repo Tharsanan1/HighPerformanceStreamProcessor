@@ -37,6 +37,8 @@ public:
     void createHeaderFile();
     void createCppFile();
     vector<Enum> enumList;
+    static string projectName;
+    static string makeAllUpper(string value);
 };
 
 

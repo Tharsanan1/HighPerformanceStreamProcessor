@@ -42,6 +42,8 @@ public:
     Method mainMethod;
     vector<string> created_attribute_refs;
     vector<InputOutputMapper> IOMapperList;
+    void prepareLogicParts(InputOutputMapper* inputOutputMapper, SiddhiqlParser::AttributeContext *ctx);
+
 };
 
 

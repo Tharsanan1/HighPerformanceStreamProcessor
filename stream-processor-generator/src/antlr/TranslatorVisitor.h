@@ -38,7 +38,7 @@ public:
     virtual antlrcpp::Any visitOutput_attribute(SiddhiqlParser::Output_attributeContext *context) override;
 
     TranslatorVisitor();
-    static InputOutputMapper getInputOutputMapperFromList(int index);
+    static InputOutputMapper* getInputOutputMapperFromList(int index);
     static vector<InputOutputMapper> getInputOutputMapperList();
     static void addInputOutputMapperInList(InputOutputMapper obj);
     static void setLocalInputOutputMapperTemp(InputOutputMapper* ctx);

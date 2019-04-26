@@ -92,7 +92,7 @@ string DetailContainerCreator::prepareDependentListForInputAttribute(){
     for (int j = 0; j < AttributeTypeMapper::getInputAttributeMap().size(); ++j) {
         int count = 0;
         for (int i = 0; i < TranslatorVisitor::getInputOutputMapperList().size(); ++i) {
-            if(contains(TranslatorVisitor::getInputOutputMapperFromList(i).getDependList(),j)){
+            if(contains(TranslatorVisitor::getInputOutputMapperFromList(i)->getDependList(),j)){
                 count++;
             }
         }

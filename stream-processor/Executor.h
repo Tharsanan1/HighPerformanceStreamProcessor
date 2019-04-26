@@ -1,18 +1,18 @@
-//
-// Created by tharsanan on 4/17/19.
-//
-
 #ifndef STREAM_PROCESSOR_EXECUTOR_H
 #define STREAM_PROCESSOR_EXECUTOR_H
-
+#include "common.h"
+#include "Sum.h"
+#include "Sum.h"
+#include "ExecutorCreator.h"
 
 class Executor {
-
-public:
-    static void performMathLogic0(int weight);
-
-    static void performMathLogic1(int weight);
+public : 
+Executor();
+	static void executeWeight(int weight);
+	static void executeTotalWeight(int weight);
+	static void executeTotalWeightt(int weightt);
+	static Sum<long> sumWeightTotalWeight;
+	static Sum<long> sumWeighttTotalWeightt;
 };
 
-
-#endif //STREAM_PROCESSOR_EXECUTOR_H
+#endif

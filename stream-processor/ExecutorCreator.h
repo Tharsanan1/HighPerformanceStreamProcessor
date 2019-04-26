@@ -7,18 +7,24 @@
 
 #include <thread>
 #include "BufferContainer.h"
+#include "OutputEmitter.h"
+#include "PerformanceMonitor.h"
 
 using namespace std;
+
+class BufferContainer;
 
 class ExecutorCreator {
 private:
     int numberOfOutputAttributes;
-    BufferContainer* bufferContainer;
+    static BufferContainer* bufferContainer;
 public:
     ExecutorCreator();
     void createThreads(ExecutorCreator* executorCreator);
     void run(int consumerIndex);
     void tempFunc();
+    static BufferContainer* getBufferContainer();
+    void outputThreadFunc();
 };
 
 

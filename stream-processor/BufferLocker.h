@@ -5,6 +5,7 @@
 #ifndef STREAM_PROCESSOR_BUFFERLOCKER_H
 #define STREAM_PROCESSOR_BUFFERLOCKER_H
 
+#include <iostream>
 #include "thread"
 #include <mutex>
 #include <condition_variable>
@@ -21,6 +22,7 @@ public:
     static mutex mutexForPopPushLock[constants::inputAttributeCount];
     static bool canPopData(int inputIndex, int consumerIndex,unique_lock<mutex>* locker);
     static bool isNew(vector<int> vec, int val);
+    static mutex* getCoutLock();
 
 };
 

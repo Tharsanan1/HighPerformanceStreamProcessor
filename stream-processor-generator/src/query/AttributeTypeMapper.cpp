@@ -71,5 +71,11 @@ int AttributeTypeMapper::getNumberForOutputAttribute(string attribute){
 }
 
 string AttributeTypeMapper::getTypeForOutputAttribute(string attribute){
-
+    auto it = outputAttributeMap.find(attribute);
+    if(it == outputAttributeMap.end()){
+        return "";
+    }
+    else{
+        return it->second;
+    }
 }

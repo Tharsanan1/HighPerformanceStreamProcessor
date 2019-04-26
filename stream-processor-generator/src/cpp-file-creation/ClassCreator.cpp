@@ -14,6 +14,9 @@ limitations under the License.
 #include <fstream>
 #include "ClassCreator.h"
 
+string ClassCreator::projectName = "STREAM_PROCESSOR";
+
+
 void ClassCreator::preparePublicMethodLines(){
     for (int i = 0; i < publicMembers.publicMethods.size(); i++) {
         Method method = publicMembers.publicMethods[i];
@@ -25,6 +28,7 @@ void ClassCreator::preparePublicMethodLines(){
             inputLine += method.returnType + " " + method.identifier + "(";
         }
         bool flag = false;
+        inputLine += method.argString;
         for( auto const& x : method.params )
         {
             inputLine +=  x.first + " " + x.second + ",";
@@ -54,6 +58,8 @@ void ClassCreator::preparePublicVariableLines(){
 }
 
 string ClassCreator::createHeaderSource(){
+    headerSrc += "#ifndef " + projectName + "_" + makeAllUpper(className) + "_H\n" + "#define " + projectName + "_" + makeAllUpper(className) + "_H\n";
+
     preparePublicMethodLines();
     preparePublicVariableLines();
     headerSrc += "#include \"common.h\"\n";
@@ -81,6 +87,7 @@ string ClassCreator::createHeaderSource(){
         }
         headerSrc += "};\n";
     }
+    headerSrc += "\n#endif";
     createHeaderFile();
     return headerSrc;
 }
@@ -139,6 +146,7 @@ string ClassCreator::createCppSource() {
             cppSrc += method.returnType + " " + method.identifier + "(";
         }
         bool flag = false;
+        cppSrc += method.argString;
         for( auto const& x : method.params )
         {
             cppSrc +=  x.first + " " + x.second + ",";
@@ -161,4 +169,12 @@ void ClassCreator::createCppFile(){
     ofstream headerFile1("/home/tharsanan/CLionProjects/ProducerConsumer/stream-processor/" + className + ".cpp");
     headerFile1 << cppSrc;
     headerFile1.close();
+}
+
+string ClassCreator::makeAllUpper(string value) {
+    string toUpper = "";
+    for(char& c : value) {
+        toUpper += toupper(c);
+    }
+    return toUpper;
 }

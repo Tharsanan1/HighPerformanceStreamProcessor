@@ -1,10 +1,10 @@
 #include "BufferContainer.h"
 BufferContainer::BufferContainer(){
 }mutex BufferContainer::mutexForPopPushLock[constants::inputAttributeCount];
-void BufferContainer::pushWeight(int value){
+void BufferContainer::pushWeightBuffer(int value){
 weightBuffer.push(value);
 }
-int BufferContainer::getFromWeight(int consumerIndex){
+int BufferContainer::getFromWeightBuffer(int consumerIndex){
 unique_lock<mutex> lock(mutexForPopPushLock[0]);
 if(BufferLocker::canPopData(0, consumerIndex, &lock)){
 return weightBuffer.pop();
@@ -13,10 +13,10 @@ else{
 return weightBuffer.front();
 }
 }
-void BufferContainer::pushWeightt(int value){
+void BufferContainer::pushWeighttBuffer(int value){
 weighttBuffer.push(value);
 }
-int BufferContainer::getFromWeightt(int consumerIndex){
+int BufferContainer::getFromWeighttBuffer(int consumerIndex){
 unique_lock<mutex> lock(mutexForPopPushLock[1]);
 if(BufferLocker::canPopData(1, consumerIndex, &lock)){
 return weighttBuffer.pop();
@@ -26,16 +26,16 @@ return weighttBuffer.front();
 }
 }
 void BufferContainer::processLogic0(){
-int weight = getFromWeight(0);
-Executor::performMathLogic0(weight );
+int weight = getFromWeightBuffer(0);
+Executor::executeWeight(weight );
 }
 void BufferContainer::processLogic1(){
-int weight = getFromWeight(1);
-Executor::performMathLogic1(weight );
+int weight = getFromWeightBuffer(1);
+Executor::executeTotalWeight(weight );
 }
 void BufferContainer::processLogic2(){
-int weightt = getFromWeightt(2);
-//Executor::performMathLogic2(weightt );
+int weightt = getFromWeighttBuffer(2);
+Executor::executeTotalWeightt(weightt );
 }
 void BufferContainer::executeProcess(int option){
 switch(option) {
@@ -46,4 +46,25 @@ break;
 case 2 : processLogic2();
 break;
 }
+}
+int BufferContainer::getFromWeightOutputBuffer(){
+return weightOutputBuffer.pop();
+
+}
+void BufferContainer::pushWeightOutputBuffer(int value){
+weightOutputBuffer.push(value);
+}
+long BufferContainer::getFromTotalWeightOutputBuffer(){
+return totalWeightOutputBuffer.pop();
+
+}
+void BufferContainer::pushTotalWeightOutputBuffer(long value){
+totalWeightOutputBuffer.push(value);
+}
+long BufferContainer::getFromTotalWeighttOutputBuffer(){
+return totalWeighttOutputBuffer.pop();
+
+}
+void BufferContainer::pushTotalWeighttOutputBuffer(long value){
+totalWeighttOutputBuffer.push(value);
 }

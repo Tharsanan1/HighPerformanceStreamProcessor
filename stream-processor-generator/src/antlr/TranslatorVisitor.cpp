@@ -120,8 +120,8 @@ void TranslatorVisitor::setFlagForAddIOMapperString(bool value){
     flagForAddIOMapperString = value;
 }
 
-InputOutputMapper TranslatorVisitor::getInputOutputMapperFromList(int index){
-    return inputOutputMapperList[index];
+InputOutputMapper* TranslatorVisitor::getInputOutputMapperFromList(int index){
+    return &inputOutputMapperList[index];
 }
 
 void TranslatorVisitor::addInputOutputMapperInList(InputOutputMapper obj){

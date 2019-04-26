@@ -14,6 +14,7 @@ limitations under the License.
 #include <iostream>
 #include <fstream>
 #include <thread>
+#include <stream-processor-generator/src/query/ArithmaticExecutorGenerator.h>
 #include "antlr4-runtime.h"
 #include "SiddhiqlLexer.h"
 #include "SiddhiqlParser.h"
@@ -23,6 +24,7 @@ limitations under the License.
 #include "queue"
 #include "BufferGenerator.h"
 #include "DetailContainerCreator.h"
+#include "OutputEmitterGenerator.h"
 
 using namespace antlrcpp;
 using namespace antlr4;
@@ -39,6 +41,11 @@ int main ( int argc, const char *args[]){
     SiddhiqlParser :: Siddhi_appContext * visitTree = parser1.siddhi_app();
     translatorVisitor.visitSiddhi_app(visitTree);
     AttributeTypeMapper attributeTypeMapper;
+
+    for (int j = 0; j < TranslatorVisitor::getInputOutputMapperList().size(); ++j) {
+        TranslatorVisitor::getInputOutputMapperFromList(j)->getLogicString();
+    }
+
     BufferGenerator bufferGenerator;
     string argString = "";
     int count  = 0;
@@ -53,14 +60,14 @@ int main ( int argc, const char *args[]){
     }
     bufferGenerator.readArgs(argString);
     for (int i = 0; i < TranslatorVisitor::getInputOutputMapperList().size(); ++i) {
-        bufferGenerator.iomappers.push_back(TranslatorVisitor::getInputOutputMapperFromList(i));
+        bufferGenerator.iomappers.push_back(TranslatorVisitor::getInputOutputMapperList()[i]);
     }
     bufferGenerator.createViaFileCreator();
     DetailContainerCreator detailContainerCreator;
     detailContainerCreator.create();
 
-
-
-
+    ArithmaticExecutorGenerator::create();
+    OutputEmitterGenerator outputEmitterGenerator;
+    outputEmitterGenerator.createOutputEmitter();
     return 0;
 }

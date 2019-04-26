@@ -1,3 +1,5 @@
+#ifndef STREAM_PROCESSOR_DETAILCONTAINER_H
+#define STREAM_PROCESSOR_DETAILCONTAINER_H
 #include "common.h"
 
 class DetailContainer {
@@ -15,3 +17,5 @@ DetailContainer();
 };
 enum constants{
 inputAttributeCount = 2};
+
+#endif

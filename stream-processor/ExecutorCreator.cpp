@@ -17,7 +17,7 @@ void ExecutorCreator::run(int consumerIndex){
 
 void ExecutorCreator::tempFunc(){
     PerformanceMonitor::setStart();
-    for (int i = 0; i < 100; ++i) {
+    for (int i = 0; i < 100000; ++i) {
         bufferContainer->pushWeightBuffer(i);
         bufferContainer->pushWeighttBuffer(i+1000);
 //        usleep(10);

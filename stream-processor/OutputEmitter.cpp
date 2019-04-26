@@ -4,8 +4,4 @@ OutputEmitter::OutputEmitter(){
 long totalWeight = bufferContainer->getFromTotalWeightOutputBuffer();
 long totalWeightt = bufferContainer->getFromTotalWeighttOutputBuffer();
 int weight = bufferContainer->getFromWeightOutputBuffer();
-    PerformanceMonitor::getElapsedTime();
-//if(weight == 99999){
-//    PerformanceMonitor::getElapsedTime();
-//}
 }

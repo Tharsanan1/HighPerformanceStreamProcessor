@@ -25,6 +25,8 @@ limitations under the License.
 #include "BufferGenerator.h"
 #include "DetailContainerCreator.h"
 #include "OutputEmitterGenerator.h"
+#include "ProcessedThreadHandlerCreator.h"
+
 
 using namespace antlrcpp;
 using namespace antlr4;
@@ -49,15 +51,26 @@ int main ( int argc, const char *args[]){
     BufferGenerator bufferGenerator;
     string argString = "";
     int count  = 0;
-    for(auto const& x : AttributeTypeMapper::getInputAttributeMap()){
+
+    for (int k = 0; k < AttributeTypeMapper::getInputAttributeNameVector().size(); ++k) {
         if(count == 0){
-            argString += x.first + " " + x.second;
+            argString += AttributeTypeMapper::getInputAttributeNameVector()[k] + " " + AttributeTypeMapper::getTypeForInputAttribute(AttributeTypeMapper::getInputAttributeNameVector()[k]);
         }
         else{
-            argString += + "," + x.first + " " + x.second;
+            argString += + "," + AttributeTypeMapper::getInputAttributeNameVector()[k] + " " + AttributeTypeMapper::getTypeForInputAttribute(AttributeTypeMapper::getInputAttributeNameVector()[k]);
         }
         count++;
     }
+
+//    for(auto const& x : AttributeTypeMapper::getInputAttributeMap()){
+//        if(count == 0){
+//            argString += x.first + " " + x.second;
+//        }
+//        else{
+//            argString += + "," + x.first + " " + x.second;
+//        }
+//        count++;
+//    }
     bufferGenerator.readArgs(argString);
     for (int i = 0; i < TranslatorVisitor::getInputOutputMapperList().size(); ++i) {
         bufferGenerator.iomappers.push_back(TranslatorVisitor::getInputOutputMapperList()[i]);
@@ -69,5 +82,52 @@ int main ( int argc, const char *args[]){
     ArithmaticExecutorGenerator::create();
     OutputEmitterGenerator outputEmitterGenerator;
     outputEmitterGenerator.createOutputEmitter();
+    ProcessedThreadHandlerCreator::createProcessedThreadHandler();
     return 0;
 }
+//
+//@App:name("CargoWeightApp")
+//
+//define stream CargoStream (weight1 int, weight2 int, weight3 int, weight4 int);
+//
+//@sink(type='log', prefix='LOGGER')
+//define stream OutputStream(weight1 int, totalWeight2 long, totalWeight3 long, totalWeight4 long);
+//
+//@info(name='CargoWeightQuery')
+//from CargoStream
+//select weight1, sum(weight2) as totalWeight2, sum(weight3) as totalWeight3, sum(weight4) as totalWeight4
+//insert into OutputStream;
+
+
+
+
+
+
+//@App:name("CargoWeightApp")
+//
+//define stream CargoStream (weight1 int, weight2 int);
+//
+//@sink(type='log', prefix='LOGGER')
+//define stream OutputStream(weight1 int, totalWeight2 long, totalWeight3 long);
+//
+//@info(name='CargoWeightQuery')
+//from CargoStream
+//select weight1, sum(weight1) as totalWeight2, sum(weight2) as totalWeight3
+//insert into OutputStream;
+
+
+
+
+
+
+//@App:name("CargoWeightApp")
+//
+//define stream CargoStream (weight1 int);
+//
+//@sink(type='log', prefix='LOGGER')
+//define stream OutputStream(weight1 int);
+//
+//@info(name='CargoWeightQuery')
+//from CargoStream
+//select weight1
+//insert into OutputStream;

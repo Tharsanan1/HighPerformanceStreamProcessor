@@ -6,6 +6,7 @@
 #define STREAM_PROCESSOR_ATTRIBUTETYPEMAPPER_H
 
 #include "map"
+#include "vector"
 
 using namespace std;
 
@@ -15,6 +16,8 @@ private:
     static map<string, string> outputAttributeMap;
     static map<string, int> inputAttributeNumberMap;
     static map<string, int> outputAttributeNumberMap;
+    static vector<string> inputAttributeNameVector;
+    static vector<string> outputAttributeNameVector;
     static int countInput;
     static int countOutput;
 public:
@@ -30,6 +33,12 @@ public:
 
     static map<string, int> getInputAttributeNumberMap();
     static map<string, int> getOutputAttributeNumberMap();
+
+    static vector<string> getInputAttributeNameVector();
+    static vector<string> getOutputAttributeNameVector();
+    static void addInputAttributeNameVector(string value);
+    static void addOutputAttributeNameVector(string value);
+
 };
 
 

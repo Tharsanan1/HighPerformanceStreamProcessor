@@ -46,9 +46,11 @@ antlrcpp::Any TranslatorVisitor :: visitDefinition_stream(SiddhiqlParser::Defini
     for (int i = 0; i < ctx->attribute_name_type().size(); ++i) {
         if(definitionVisitCount == 1){
             AttributeTypeMapper::addToInputAttributeMap(ctx->attribute_name_type(i)->attribute_name()->getText(), ctx->attribute_name_type(i)->attribute_type()->getText());
+            AttributeTypeMapper::addInputAttributeNameVector(ctx->attribute_name_type(i)->attribute_name()->getText());
         }
         else{
             AttributeTypeMapper::addToOutputAttributeMap(ctx->attribute_name_type(i)->attribute_name()->getText(), ctx->attribute_name_type(i)->attribute_type()->getText());
+            AttributeTypeMapper::addOutputAttributeNameVector(ctx->attribute_name_type(i)->attribute_name()->getText());
         }
     }
     return visitChildren(ctx);

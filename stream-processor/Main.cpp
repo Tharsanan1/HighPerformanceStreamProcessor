@@ -9,3 +9,9 @@ int main (){
     ExecutorCreator* executorCreator = new ExecutorCreator();
     executorCreator->createThreads(executorCreator);
 }
+
+
+//if(weight1 == 99999){
+//PerformanceMonitor::getElapsedTime();
+//cout<<totalWeight2<<"\n";
+//}

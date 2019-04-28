@@ -39,4 +39,5 @@ add_executable(stream_processor
         OutputEmitter.h
         PerformanceMonitor.cpp
         PerformanceMonitor.h
+        ProcessedThreadHandler.cpp
         Main.cpp)

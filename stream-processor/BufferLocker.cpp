@@ -11,20 +11,35 @@ mutex BufferLocker::cout_mutex;
 
 
 bool BufferLocker::canPopData(int inputIndex, int consumerIndex,unique_lock<mutex>* locker){
-    while(!isNew(processedConsumerList[inputIndex], consumerIndex)){
+    while(!ProcessedThreadHandler::getValueForInputAndConsumer(inputIndex, consumerIndex)){
         m_condVar[inputIndex].wait(*locker);
 
     }
-    processedConsumerList[inputIndex].push_back(consumerIndex);
-    if(processedConsumerList[inputIndex].size() == DetailContainer::getDependentConsumerCountForInput(inputIndex)){
-        processedConsumerList[inputIndex].clear();
-        m_condVar[inputIndex].notify_all();
+    ProcessedThreadHandler::setValueForInputAndConsumer(inputIndex,consumerIndex,false);
+    if(ProcessedThreadHandler::allSet(inputIndex)){
+        ProcessedThreadHandler::setAllDefault(inputIndex);
+        m_condVar[inputIndex].notify_one();
 
         return true;
     }
     else{
         return false;
     }
+//    while(!isNew(processedConsumerList[inputIndex], consumerIndex)){
+//        m_condVar[inputIndex].wait(*locker);
+//
+//    }
+//    processedConsumerList[inputIndex].push_back(consumerIndex);
+//    if(processedConsumerList[inputIndex].size() == DetailContainer::getDependentConsumerCountForInput(inputIndex)){
+//        processedConsumerList[inputIndex].clear();
+//        m_condVar[inputIndex].notify_one();
+//
+//        return true;
+//    }
+//    else{
+//        return false;
+//    }
+
 }
 
 bool BufferLocker::isNew(vector<int> vec, int val){

@@ -10,6 +10,7 @@
 #include <mutex>
 #include <condition_variable>
 #include "DetailContainer.h"
+#include "ProcessedThreadHandler.h"
 
 using namespace std;
 
@@ -17,6 +18,7 @@ class BufferLocker {
 private:
     static condition_variable m_condVar[constants::inputAttributeCount];
     static vector<int> processedConsumerList[constants::inputAttributeCount];
+
 public:
     static mutex cout_mutex;
     static mutex mutexForPopPushLock[constants::inputAttributeCount];

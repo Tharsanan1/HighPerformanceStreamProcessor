@@ -11,7 +11,7 @@
 class OutputEmitterGenerator {
 public:
     void createOutputEmitter();
-    std::string makeFirstCapital(std::string s);
+    static std::string makeFirstCapital(std::string s);
 };
 
 

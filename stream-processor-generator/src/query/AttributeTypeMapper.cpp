@@ -9,6 +9,8 @@ map<string, string> AttributeTypeMapper::inputAttributeMap;
 map<string, string> AttributeTypeMapper::outputAttributeMap;
 map<string, int> AttributeTypeMapper::inputAttributeNumberMap;
 map<string, int> AttributeTypeMapper::outputAttributeNumberMap;
+vector<string> AttributeTypeMapper::inputAttributeNameVector;
+vector<string> AttributeTypeMapper::outputAttributeNameVector;
 int AttributeTypeMapper::countInput = 0;
 int AttributeTypeMapper::countOutput = 0;
 
@@ -78,4 +80,20 @@ string AttributeTypeMapper::getTypeForOutputAttribute(string attribute){
     else{
         return it->second;
     }
+}
+
+vector<string> AttributeTypeMapper::getOutputAttributeNameVector() {
+    return outputAttributeNameVector;
+}
+
+vector<string> AttributeTypeMapper::getInputAttributeNameVector() {
+    return inputAttributeNameVector;
+}
+
+void AttributeTypeMapper::addInputAttributeNameVector(string value) {
+    inputAttributeNameVector.push_back(value);
+}
+
+void AttributeTypeMapper::addOutputAttributeNameVector(string value) {
+    outputAttributeNameVector.push_back(value);
 }

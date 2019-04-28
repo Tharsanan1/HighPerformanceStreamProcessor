@@ -18,11 +18,11 @@ void ExecutorCreator::run(int consumerIndex){
 void ExecutorCreator::tempFunc(){
     PerformanceMonitor::setStart();
 //    for (int i = 0; i < 100; ++i) {
-        for (int j = 0; j < 100; ++j) {
+        for (int j = 0; j < 100000; ++j) {
             bufferContainer->pushWeight1Buffer(j);
             bufferContainer->pushWeight2Buffer(j);
-            bufferContainer->pushWeight3Buffer(j);
-            bufferContainer->pushWeight4Buffer(j);
+//            bufferContainer->pushWeight3Buffer(j);
+//            bufferContainer->pushWeight4Buffer(j);
 //        usleep(10);
         }
 //    }

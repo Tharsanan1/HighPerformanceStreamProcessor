@@ -58,6 +58,7 @@ add_executable(ProducerConsumer
     stream-processor-generator/src/query/DetailContainerCreator.cpp
     stream-processor-generator/src/query/ArithmaticExecutorGenerator.cpp
     stream-processor-generator/src/query/OutputEmitterGenerator.cpp
+    stream-processor-generator/src/query/ProcessedThreadHandlerCreator.cpp
     main.cpp
 )
 

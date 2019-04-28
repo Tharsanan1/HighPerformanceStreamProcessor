@@ -29,6 +29,7 @@ public:
     string cppSrc;
     string className;
     vector<string> lines;
+    vector<string> outSideClassDefnitions;
     void prepareIncludeLines();
     void preparePublicMethodLines();
     void preparePublicVariableLines();

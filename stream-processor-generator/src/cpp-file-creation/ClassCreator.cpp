@@ -64,6 +64,9 @@ string ClassCreator::createHeaderSource(){
     preparePublicVariableLines();
     headerSrc += "#include \"common.h\"\n";
     headerSrc += include.getIncludes() + "\n";
+    for (int l = 0; l < outSideClassDefnitions.size(); ++l) {
+        headerSrc += outSideClassDefnitions[l];
+    }
     headerSrc += "class " + className + " {\n";
     headerSrc += "public : \n";
     headerSrc += className + "();\n";

@@ -90,10 +90,6 @@ void BufferGenerator::preparingExecutingFunction() {
     caseMethod.params.insert(pair<string,string>("int","option"));
     for (int i = 0; i < this->iomappers.size(); ++i) {
 
-        Variable variable;
-        variable.identifier = "executor"+std::to_string(i);
-        variable.dataType = "Executor";
-        this->variables.push_back(variable);
 
         caseMethod.lines.push_back("case "+std::to_string(i)+" : processLogic"+std::to_string(i)+"();\nbreak;");
         Method method;

@@ -1,10 +1,9 @@
 #include "OutputEmitter.h"
 OutputEmitter::OutputEmitter(){
 }void OutputEmitter::emitData(BufferContainer* bufferContainer){
-long totalWeight = bufferContainer->getFromTotalWeightOutputBuffer();
-long totalWeightt = bufferContainer->getFromTotalWeighttOutputBuffer();
-int weight = bufferContainer->getFromWeightOutputBuffer();
-if(weight == 99999){
-    PerformanceMonitor::getElapsedTime();
-}
+long totalWeight2 = bufferContainer->getFromTotalWeight2OutputBuffer();
+long totalWeight3 = bufferContainer->getFromTotalWeight3OutputBuffer();
+long totalWeight4 = bufferContainer->getFromTotalWeight4OutputBuffer();
+int weight1 = bufferContainer->getFromWeight1OutputBuffer();
+PerformanceMonitor::getElapsedTime();
 }

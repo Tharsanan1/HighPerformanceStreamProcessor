@@ -17,11 +17,16 @@ void ExecutorCreator::run(int consumerIndex){
 
 void ExecutorCreator::tempFunc(){
     PerformanceMonitor::setStart();
-    for (int i = 0; i < 100000; ++i) {
-        bufferContainer->pushWeightBuffer(i);
-        bufferContainer->pushWeighttBuffer(i+1000);
+//    for (int i = 0; i < 100; ++i) {
+        for (int j = 0; j < 100; ++j) {
+            bufferContainer->pushWeight1Buffer(j);
+            bufferContainer->pushWeight2Buffer(j);
+            bufferContainer->pushWeight3Buffer(j);
+            bufferContainer->pushWeight4Buffer(j);
 //        usleep(10);
-    }
+        }
+//    }
+//    PerformanceMonitor::getElapsedTime();
 
 }
 
@@ -44,7 +49,7 @@ void ExecutorCreator::createThreads(ExecutorCreator* executorCreator){
         t[i].join();
     }
     th.join();
-    //outputThread.join();
+    outputThread.join();
     delete bufferContainer;
 
 }

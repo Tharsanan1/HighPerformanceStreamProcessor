@@ -15,7 +15,7 @@
 #include <zconf.h>
 #include "iostream"
 #include "BufferLocker.h"
-
+#include "chrono"
 using namespace std;
 
 template <class T>
@@ -24,7 +24,6 @@ private:
     condition_variable m_condVar;
     mutex mutexForPopPushLock;
     queue<T>* bufferQueue;
-
 public:
     Buffer();
     T back();
@@ -50,7 +49,9 @@ template <class T>
 T Buffer<T>::front(){
     unique_lock<mutex> locker(mutexForPopPushLock);
     while(bufferQueue->empty()){
-        m_condVar.wait(locker);
+//        m_condVar.wait_for(locker,1ms);
+//        m_condVar.wait(locker);
+        m_condVar.wait_for(locker,chrono::nanoseconds(8));
     }
     T value = bufferQueue->front();
     locker.unlock();
@@ -61,8 +62,11 @@ template <class T>
 T Buffer<T>::pop(){
     unique_lock<mutex> locker(mutexForPopPushLock);
     while(bufferQueue->empty()){
-        m_condVar.wait(locker);
+        m_condVar.wait_for(locker,chrono::nanoseconds(8));
+//        m_condVar.wait_for(locker,1ms);
+//        m_condVar.wait(locker);
     }
+
     T value = bufferQueue->front();
     bufferQueue->pop();
     locker.unlock();
@@ -73,9 +77,10 @@ template <class T>
 void Buffer<T>::push(T const& value){
 
     unique_lock<mutex> locker(mutexForPopPushLock);
+
     bufferQueue->push(value);
     locker.unlock();
-    m_condVar.notify_all();
+//    m_condVar.notify_one();
 }
 
 

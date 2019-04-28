@@ -16,6 +16,6 @@ DetailContainer();
 	static bool executionFlag;
 };
 enum constants{
-inputAttributeCount = 2};
+inputAttributeCount = 4};
 
 #endif

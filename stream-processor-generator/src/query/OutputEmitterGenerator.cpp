@@ -8,6 +8,7 @@ void OutputEmitterGenerator::createOutputEmitter() {
     ClassCreator outputEmitter;
     Include include;
     include.includes.push_back("BufferContainer.h");
+    outputEmitter.outSideClassDefnitions.push_back("class BufferContainer;\n");
     outputEmitter.include = include;
     outputEmitter.className = "OutputEmitter";
     Method emitData;
